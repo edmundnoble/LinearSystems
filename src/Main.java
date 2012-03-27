@@ -1,68 +1,63 @@
-import java.util.ArrayList;
+import java.io.PrintStream;
 import java.util.Scanner;
+
+import Jama.Matrix;
+
 
 public class Main {
 
-	private static Scanner scanner = new Scanner(System.in);
-	private static ArrayList<Integer> equation1, equation2;
-	private static ArrayList<String> vars = new ArrayList<String>();
+	private static int equationCount = -1;
+	private static final PrintStream OUT = System.out;
 
 	public static void main(String... args) {
-		parseInput();
-		int tempint = 0;
-		for (Object obj : equation1.toArray()) {
-			int integer = (Integer) obj;
-			tempint += integer;
-		}
-		for (Object obj : equation2.toArray()) {
-			int integer = (Integer) obj;
-			tempint -= integer;
-		}
-		String[] vararray = (String[]) vars.toArray();
-		for (int i = 0; i < vararray.length; i++) {
-
-			String string = vararray[i];
-			if (string.length() > 2) {
-				try {
-					String[] parsableString = new String[5];
-					for (int l = 0; l < vararray.length; l++) {
-						if (l != i) {
-							try {
-								parsableString[l] = vararray[l];
-							} catch (NumberFormatException e) {
-
-							}
-						}
-					}
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		OUT.println("Remember, your equation must be formatted like so: "
+				+ "\ncoefficient(variable) + coef(var) = constant\n");
+		parseInput(new Scanner(System.in));
 	}
 
-	private static void parseInput() {
-		equation1 = new ArrayList<Integer>();
-		equation2 = new ArrayList<Integer>();
-
-		System.out.println("First equation:");
-
-		String[] temp = scanner.nextLine().split(" ");
-		for (String element : temp) {
-			try {
-				equation1.add(Integer.parseInt(element));
-			} catch (NumberFormatException e) {
-				vars.add(element);
+	private static void parseInput(Scanner scanner) {
+		String tooHigh = "Only works with less than nine equations.";
+		String tooLow = "Must have more than one equation.";
+		String isNaN = "Not a number";
+		OUT.println("How many equations?");
+		equationCount = scanner.nextInt();
+		scanner.nextLine();
+		if (Float.isNaN(equationCount)) {
+			OUT.println(isNaN);
+			parseInput(scanner);
+		}
+		if (equationCount > 9 || equationCount < 2) {
+			OUT.println(equationCount > 9 ? tooHigh : tooLow);
+			parseInput(scanner);
+		}
+		OUT.println("Enter variable names in alphabetical order.");
+		String[] varNames = new String[equationCount];
+		double[][] coefs = new double[equationCount][equationCount];
+		double[] constants = new double[equationCount];
+		for (int i = 0; i < equationCount; i++) {
+			OUT.println("Variable name " + (i + 1) + ":");
+			varNames[i] = scanner.nextLine();
+		}
+		for (int i = 0; i < equationCount; i++) {
+			for (int j = 0; j < equationCount; j++) {
+				OUT.println("Enter variable " + varNames[i]
+						+ " coefficient in equation " + (j + 1));
+				coefs[j][i] = scanner.nextDouble();
+				scanner.nextLine();
 			}
 		}
-		System.out.println("Second equation:");
-		temp = scanner.nextLine().split(" ");
-		for (String element : temp) {
-			try {
-				equation2.add(Integer.parseInt(element));
-			} catch (NumberFormatException e) {
-				vars.add(element);
-			}
+		for (int i = 0; i < equationCount; i++) {
+			OUT.println("Enter constant in equation " + (i + 1));
+			constants[i] = scanner.nextDouble();
+			scanner.nextLine();
+		}
+		Matrix coefMatrix = new Matrix(coefs).inverse();
+		Matrix constMatrix = new Matrix(constants, constants.length);
+		Matrix resultMatrix = coefMatrix.times(constMatrix);
+		for (int i = 0; i < varNames.length; i++) {
+			String element = varNames[i];
+			Double result = resultMatrix.get(i, 0);
+			System.out.println(element + "= " + result);
 		}
 	}
 }
