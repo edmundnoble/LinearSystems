@@ -1,12 +1,13 @@
 
-
 package linearsystems;
 
 import java.io.PrintStream;
 import java.util.Scanner;
 
-import Jama.Matrix;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
+import Jama.Matrix;
 
 public class Main {
 
@@ -14,12 +15,21 @@ public class Main {
 	private static final PrintStream OUT = System.out;
 
 	public static void main(String... args) {
-		OUT.println("Remember, your equation must be formatted like so: "
-				+ "\ncoefficient(variable) + coef(var) = constant\n");
-		parseInput(new Scanner(System.in));
+
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				OUT.println("Remember, your equation must be formatted like so: "
+						+ "\ncoefficient(variable) + coef(var) = constant\n");
+				// parseInput(new Scanner(System.in));
+				JFrame firstFrame = new FirstFrame();
+				firstFrame.setVisible(true);
+			}
+		});
 	}
 
-	strictfp private static void parseInput(Scanner scanner) {
+	private static void parseInput(Scanner scanner) {
 		OUT.println("How many equations?");
 		equationCount = scanner.nextInt();
 		scanner.nextLine();
