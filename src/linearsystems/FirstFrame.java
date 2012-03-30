@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -18,6 +19,8 @@ class FirstFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 3133917569587588766L;
 	private JPanel[] panels = new JPanel[3];
+	private final JLabel equationNumLabel = new JLabel(
+			"Number of equations:");
 	private final JTextField equationNumberBox = new JTextField();
 	private final ArrayList<JTextField> coefBoxes = new ArrayList<JTextField>(),
 			constantBoxes = new ArrayList<JTextField>();
@@ -29,22 +32,18 @@ class FirstFrame extends JFrame implements ActionListener {
 		for (int i = 0; i < 3; i++) {
 			panels[i] = new JPanel();
 		}
-		JPanel panel = panels[0];
-		panel.setLayout(new GridBagLayout());
-		JTextField[] fields = new JTextField[3];
-		for (int i = 0; i < 3; i++) {
-			fields[i] = new JTextField("", 10);
-			addItem(panel, fields[i], 200 * i, 100 * i, 1000, 1000,
-					GridBagConstraints.WEST);
-		}
-		addItem(panel, new JButton("LOL"), -250, 250, 250, 250,
+		panels[0].setLayout(new GridBagLayout());
+		JTextField[] fields = new JTextField[1];
+		addItem(panels[0], equationNumLabel, 200, 300, 10, 10,
+				GridBagConstraints.WEST);
+		addItem(panels[0], equationNumberBox, 500, 300, 10, 10,
+				GridBagConstraints.NORTH);
+		addItem(panels[0], new JButton("Next"), 500, 500, 10, 10,
 				GridBagConstraints.EAST);
-		panel.add(new JButton());
-		panel.setLocation(1, 1);
-
-		add(panel);
-		panel.setSize(400, 400);
-		panel.setVisible(true);
+		panels[0].setLocation(1, 1);
+		add(panels[0]);
+		panels[0].setSize(400, 400);
+		panels[0].setVisible(true);
 		setSize(400, 400);
 
 		// panels.get(1).setSize(400, 400);
